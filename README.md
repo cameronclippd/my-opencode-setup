@@ -7,7 +7,8 @@ Personal OpenCode commands, custom agents, and plugins for enhanced development 
 This repository contains:
 - **16 Custom Commands** organized into 6 categories
 - **1 Custom Agent** for controlled development workflow
-- **1 Plugin** for system notifications
+- **2 Plugins** for enhanced functionality
+- **1 Custom Tool** for direct execution
 
 ### Commands
 - **PR & Git Workflows** (4 commands)
@@ -22,6 +23,9 @@ This repository contains:
 
 ### Plugins
 - **notifications**: macOS notifications for permission requests and session completion
+
+### Tools
+- **copilot-usage**: Check GitHub Copilot billing and usage
 
 ## Tech Stack
 
@@ -221,24 +225,16 @@ Analyzes error logs and stack traces to suggest fixes.
 ### Utilities
 
 #### `/copilot-usage`
-Check your GitHub Copilot billing usage and costs.
-- Shows current month's usage breakdown by default
-- Supports both personal and organization accounts
-- Auto-detects context from git repository
-- Displays costs, seat allocation (for orgs), and premium request usage
-- Optional flags: `--month`, `--year`, `--verbose`
+Check your GitHub Copilot billing usage and costs. This command uses a custom tool for fast, direct execution without AI agent overhead.
 
 **Usage:** 
 - `/copilot-usage` - Auto-detect account from git remote
-- `/copilot-usage personal` - Personal account
-- `/copilot-usage clippd` - Specific organization
-- `/copilot-usage --month 11 --year 2024` - Historical data
-- `/copilot-usage --verbose` - Detailed SKU breakdown
+- `/copilot-usage personal` - Check personal account
+- `/copilot-usage <org-name>` - Check specific organization
+- Add `--month <M> --year <YYYY>` for historical data
+- Add `--verbose` for detailed breakdown
 
-**Requirements:** 
-- GitHub CLI with appropriate scopes:
-  - Personal: `gh auth refresh -h github.com -s user`
-  - Organization: `gh auth refresh -h github.com -s admin:org`
+See the [copilot-usage tool](#copilot-usage-1) section for full details.
 
 ---
 
@@ -265,6 +261,41 @@ Sends native macOS notifications for OpenCode events to keep you informed when y
 
 **Usage:**
 Once installed, the plugin automatically runs in the background. No configuration needed!
+
+---
+
+## Tools
+
+### `copilot-usage`
+A custom tool that provides fast, direct access to GitHub Copilot billing and usage information without AI agent overhead.
+
+**Features:**
+- **Zero AI inference cost** - Runs as a direct tool, not through the agent
+- **Fast execution** - Direct API calls to GitHub
+- **Auto-detection** - Automatically detects org context from git remote
+- **Comprehensive data** - Shows seat allocation, usage metrics, and costs
+- **Historical queries** - Optional month/year parameters for past data
+- **Verbose mode** - Detailed SKU and pricing breakdown when needed
+
+**What it shows:**
+- Current billing period
+- Copilot usage breakdown (seats, completions, etc.)
+- Premium request usage (advanced models like GPT-4)
+- Costs with discounts applied
+- For orgs: seat allocation, active/inactive seats, plan type
+
+**Command usage:**
+- `/copilot-usage` - Auto-detect account from git remote
+- `/copilot-usage personal` - Check personal account
+- `/copilot-usage clippd` - Check specific organization
+- `/copilot-usage --month 11 --year 2024` - Historical data
+- `/copilot-usage --verbose` - Detailed breakdown
+
+**Requirements:**
+- GitHub CLI with appropriate scopes:
+  - Personal: `gh auth refresh -h github.com -s user`
+  - Organization: `gh auth refresh -h github.com -s admin:org`
+- Tool automatically loaded by OpenCode on startup
 
 ---
 

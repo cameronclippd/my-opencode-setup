@@ -34,6 +34,12 @@ if [ ! -d "$HOME/.config/opencode/plugin" ]; then
     mkdir -p "$HOME/.config/opencode/plugin"
 fi
 
+# Check if tool directory exists
+if [ ! -d "$HOME/.config/opencode/tool" ]; then
+    echo -e "${YELLOW}Creating tool directory...${NC}"
+    mkdir -p "$HOME/.config/opencode/tool"
+fi
+
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -96,12 +102,15 @@ fi
 
 # Create plugin symlinks (if plugins directory exists)
 if [ -d "$SCRIPT_DIR/plugins" ]; then
-    PLUGIN_COUNT=$(ls -1 "$SCRIPT_DIR/plugins"/*.js 2>/dev/null | wc -l)
+    PLUGIN_COUNT=$(find "$SCRIPT_DIR/plugins" -type f \( -name "*.js" -o -name "*.ts" \) 2>/dev/null | wc -l)
     
     if [ "$PLUGIN_COUNT" -gt 0 ]; then
         echo ""
         echo "Installing plugins..."
-        for plugin_file in "$SCRIPT_DIR/plugins"/*.js; do
+        for plugin_file in "$SCRIPT_DIR/plugins"/*.js "$SCRIPT_DIR/plugins"/*.ts; do
+            # Skip if glob didn't match any files
+            [ -e "$plugin_file" ] || continue
+            
             plugin_name=$(basename "$plugin_file")
             target="$HOME/.config/opencode/plugin/$plugin_name"
             
@@ -118,6 +127,33 @@ if [ -d "$SCRIPT_DIR/plugins" ]; then
     fi
 fi
 
+# Create tool symlinks (if tools directory exists)
+if [ -d "$SCRIPT_DIR/tools" ]; then
+    TOOL_COUNT=$(find "$SCRIPT_DIR/tools" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.mjs" \) 2>/dev/null | wc -l)
+    
+    if [ "$TOOL_COUNT" -gt 0 ]; then
+        echo ""
+        echo "Installing tools..."
+        for tool_file in "$SCRIPT_DIR/tools"/*.js "$SCRIPT_DIR/tools"/*.ts "$SCRIPT_DIR/tools"/*.mjs; do
+            # Skip if glob didn't match any files
+            [ -e "$tool_file" ] || continue
+            
+            tool_name=$(basename "$tool_file")
+            target="$HOME/.config/opencode/tool/$tool_name"
+            
+            # Remove existing symlink or file if it exists
+            if [ -e "$target" ] || [ -L "$target" ]; then
+                echo -e "${YELLOW}  Replacing existing: $tool_name${NC}"
+                rm "$target"
+            fi
+            
+            # Create symlink
+            ln -s "$tool_file" "$target"
+            echo -e "${GREEN}  ✓ Installed tool: $tool_name${NC}"
+        done
+    fi
+fi
+
 echo ""
 echo -e "${GREEN}✅ Installation complete!${NC}"
 echo ""
@@ -130,10 +166,16 @@ if [ -d "$HOME/.config/opencode/agent" ] && [ "$(ls -A $HOME/.config/opencode/ag
     ls -1 "$HOME/.config/opencode/agent" | grep -E "\.md$" | sed 's/\.md$//' | sed 's/^/  @/g'
 fi
 
-if [ -d "$HOME/.config/opencode/plugin" ] && [ "$(ls -A $HOME/.config/opencode/plugin/*.js 2>/dev/null)" ]; then
+if [ -d "$HOME/.config/opencode/plugin" ] && [ "$(find $HOME/.config/opencode/plugin -type f \( -name "*.js" -o -name "*.ts" \) 2>/dev/null)" ]; then
     echo ""
     echo "Plugins installed:"
-    ls -1 "$HOME/.config/opencode/plugin" | grep -E "\.js$" | sed 's/\.js$//' | sed 's/^/  - /g'
+    ls -1 "$HOME/.config/opencode/plugin" | grep -E "\.(js|ts)$" | sed 's/\.\(js\|ts\)$//' | sed 's/^/  - /g'
+fi
+
+if [ -d "$HOME/.config/opencode/tool" ] && [ "$(find $HOME/.config/opencode/tool -type f \( -name "*.js" -o -name "*.ts" -o -name "*.mjs" \) 2>/dev/null)" ]; then
+    echo ""
+    echo "Tools installed:"
+    ls -1 "$HOME/.config/opencode/tool" | grep -E "\.(js|ts|mjs)$" | sed 's/\.\(js\|ts\|mjs\)$//' | sed 's/^/  - /g'
 fi
 
 echo ""
@@ -141,5 +183,6 @@ echo "Usage:"
 echo "  Commands: Type / in OpenCode TUI to see all available commands"
 echo "  Agents: Press Tab to cycle through agents, or use @agent-name to invoke"
 echo "  Plugins: Automatically loaded by OpenCode on startup"
+echo "  Tools: Available to the agent automatically"
 echo ""
 echo "To update: cd $SCRIPT_DIR && git pull && ./install.sh"
