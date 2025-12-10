@@ -133,7 +133,7 @@ fi
 if [ -d "$HOME/.config/opencode/plugin" ] && [ "$(ls -A $HOME/.config/opencode/plugin/*.js 2>/dev/null)" ]; then
     echo ""
     echo "Plugins installed:"
-    ls -1 "$HOME/.config/opencode/plugin" | grep -E "\.js$" | sed 's/\.js$//'| sed 's/^/  - /g'
+    ls -1 "$HOME/.config/opencode/plugin" | grep -E "\.js$" | sed 's/\.js$//' | sed 's/^/  - /g'
 fi
 
 echo ""
