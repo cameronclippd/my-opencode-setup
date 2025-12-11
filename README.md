@@ -7,7 +7,7 @@ Personal OpenCode commands, custom agents, and plugins for enhanced development 
 This repository contains:
 - **16 Custom Commands** organized into 6 categories
 - **1 Custom Agent** for controlled development workflow
-- **2 Plugins** for enhanced functionality
+- **1 Plugin** for enhanced functionality
 - **1 Custom Tool** for direct execution
 
 ### Commands
