@@ -5,10 +5,10 @@ Personal OpenCode commands, custom agents, and plugins for enhanced development 
 ## Overview
 
 This repository contains:
-- **22 Custom Commands** organized into 7 categories
+- **16 Custom Commands** organized into 6 categories
 - **1 Custom Agent** for controlled development workflow
 - **1 Plugin** for enhanced functionality
-- **7 Custom Tools** for direct execution
+- **1 Custom Tool** for direct execution
 
 ### Commands
 - **Git Worktree Management** (6 commands)
@@ -27,12 +27,6 @@ This repository contains:
 
 ### Tools
 - **copilot-usage**: Check GitHub Copilot billing and usage
-- **worktree-add**: Create new git worktree for parallel development
-- **worktree-list**: List all active worktrees
-- **worktree-remove**: Remove a worktree and optionally delete branch
-- **worktree-switch**: Switch between worktrees
-- **worktree-status**: View status of all worktrees
-- **worktree-sync**: Fetch and sync all worktrees with remote
 
 ## Tech Stack
 
@@ -337,48 +331,6 @@ Once installed, the plugin automatically runs in the background. No configuratio
 ---
 
 ## Tools
-
-### `worktree-*`
-A suite of custom tools for managing git worktrees, enabling parallel development on multiple features without context switching.
-
-**What are git worktrees?**
-Git worktrees let you have multiple branches checked out simultaneously in different directories. Perfect for:
-- Working on multiple features at once
-- Quick hotfix while keeping feature work intact
-- Reviewing PRs without stashing current work
-- Running tests on one branch while coding on another
-
-**Features:**
-- **Zero AI inference cost** - Runs as direct tools, not through the agent
-- **Fast execution** - Direct git commands with no overhead
-- **Auto-session management** - Automatically opens OpenCode in new worktrees
-- **Smart .gitignore** - Automatically adds `.opencode-wt/` to .gitignore
-- **Comprehensive status** - Track uncommitted changes and remote sync across all worktrees
-- **Safe operations** - Validates before destructive actions, prevents accidental main worktree removal
-
-**Directory structure:**
-All worktrees are created in `.opencode-wt/` within your repo:
-```
-/projects/myapp/              # Main worktree (main branch)
-├── .opencode-wt/             # Worktrees directory (auto-added to .gitignore)
-│   ├── feature-auth/         # feature-auth branch
-│   ├── feature-api/          # feature-api branch
-│   └── hotfix-123/           # hotfix branch
-├── src/
-└── package.json
-```
-
-**Available commands:**
-- `/worktree-add <branch>` - Create new worktree and open in OpenCode
-- `/worktree-list` - List all worktrees
-- `/worktree-remove <branch>` - Remove worktree (with optional branch deletion)
-- `/worktree-switch <branch>` - Open OpenCode session in worktree
-- `/worktree-status` - View status of all worktrees
-- `/worktree-sync` - Fetch and sync all worktrees with remote
-
-See the [Git Worktree Management](#git-worktree-management) section for detailed usage of each command.
-
----
 
 ### `copilot-usage`
 A custom tool that provides fast, direct access to GitHub Copilot billing and usage information without AI agent overhead.
