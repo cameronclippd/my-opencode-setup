@@ -82,8 +82,13 @@ export async function ensureGitignore(repoRoot) {
       return; // Already exists
     }
     
-    // Add entry
-    await Bun.write(gitignorePath, `${content}\n${WORKTREE_DIR}/\n`);
+    // Add entry, ensuring there is exactly one newline between existing content and the new line
+    let newContent = content;
+    if (!newContent.endsWith('\n') && newContent.length > 0) {
+      newContent += '\n';
+    }
+    newContent += `${WORKTREE_DIR}/\n`;
+    await Bun.write(gitignorePath, newContent);
     console.log(`${colors.green}✓ Added ${WORKTREE_DIR}/ to .gitignore${colors.reset}`);
   } catch (error) {
     console.error(`${colors.yellow}⚠ Warning: Could not update .gitignore: ${error.message}${colors.reset}`);
