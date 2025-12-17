@@ -92,6 +92,71 @@ git pull
 
 ## Commands Reference
 
+### Git Worktree Management
+
+Git worktrees allow you to work on multiple branches simultaneously without switching contexts. All worktrees are created in `.opencode-wt/` directory.
+
+#### `/worktree-add`
+Creates a new git worktree for parallel development.
+- Automatically creates worktrees in `.opencode-wt/<branch-name>`
+- Smart branch detection (local/remote/new)
+- Auto-configures `.gitignore`
+- Automatically opens new OpenCode session in worktree
+
+**Usage:** 
+- `/worktree-add feature-auth` - Create new branch from current HEAD
+- `/worktree-add feature-api --from main` - Create from specific branch
+- `/worktree-add experiment --no-open` - Create without opening session
+
+#### `/worktree-list`
+Lists all active worktrees with their current branch and status.
+- Shows main and linked worktrees
+- Highlights current worktree
+- Displays branch names and commit hashes
+
+**Usage:** `/worktree-list`
+
+#### `/worktree-remove`
+Removes a worktree and optionally deletes the branch.
+- Validates no uncommitted changes
+- Prevents removing main worktree
+- Option to delete branch after removal
+
+**Usage:** 
+- `/worktree-remove feature-auth`
+- `/worktree-remove old-feature --delete-branch`
+- `/worktree-remove stale --force` - Force removal with uncommitted changes
+
+#### `/worktree-switch`
+Opens an OpenCode session in a different worktree.
+- Lists available worktrees if no argument provided
+- Automatically launches OpenCode in selected worktree
+
+**Usage:** 
+- `/worktree-switch` - Show available worktrees
+- `/worktree-switch feature-api` - Switch to specific worktree
+
+#### `/worktree-status`
+Shows detailed status of all worktrees including uncommitted changes and remote sync status.
+- Displays working directory status (clean/modified)
+- Shows commits ahead/behind remote
+- Lists last commit message and time
+- Summary of clean vs dirty worktrees
+
+**Usage:** `/worktree-status`
+
+#### `/worktree-sync`
+Fetches from remote and shows which worktrees have updates available.
+- Runs `git fetch origin`
+- Shows which worktrees are behind remote
+- Optionally pulls updates in all worktrees
+
+**Usage:** 
+- `/worktree-sync` - Fetch and show status
+- `/worktree-sync --pull` - Fetch and auto-pull in all worktrees
+
+---
+
 ### PR & Git Workflows
 
 #### `/pr-create`
@@ -272,6 +337,48 @@ Once installed, the plugin automatically runs in the background. No configuratio
 ---
 
 ## Tools
+
+### `worktree-*`
+A suite of custom tools for managing git worktrees, enabling parallel development on multiple features without context switching.
+
+**What are git worktrees?**
+Git worktrees let you have multiple branches checked out simultaneously in different directories. Perfect for:
+- Working on multiple features at once
+- Quick hotfix while keeping feature work intact
+- Reviewing PRs without stashing current work
+- Running tests on one branch while coding on another
+
+**Features:**
+- **Zero AI inference cost** - Runs as direct tools, not through the agent
+- **Fast execution** - Direct git commands with no overhead
+- **Auto-session management** - Automatically opens OpenCode in new worktrees
+- **Smart .gitignore** - Automatically adds `.opencode-wt/` to .gitignore
+- **Comprehensive status** - Track uncommitted changes and remote sync across all worktrees
+- **Safe operations** - Validates before destructive actions, prevents accidental main worktree removal
+
+**Directory structure:**
+All worktrees are created in `.opencode-wt/` within your repo:
+```
+/projects/myapp/              # Main worktree (main branch)
+├── .opencode-wt/             # Worktrees directory (auto-added to .gitignore)
+│   ├── feature-auth/         # feature-auth branch
+│   ├── feature-api/          # feature-api branch
+│   └── hotfix-123/           # hotfix branch
+├── src/
+└── package.json
+```
+
+**Available commands:**
+- `/worktree-add <branch>` - Create new worktree and open in OpenCode
+- `/worktree-list` - List all worktrees
+- `/worktree-remove <branch>` - Remove worktree (with optional branch deletion)
+- `/worktree-switch <branch>` - Open OpenCode session in worktree
+- `/worktree-status` - View status of all worktrees
+- `/worktree-sync` - Fetch and sync all worktrees with remote
+
+See the [Git Worktree Management](#git-worktree-management) section for detailed usage of each command.
+
+---
 
 ### `copilot-usage`
 A custom tool that provides fast, direct access to GitHub Copilot billing and usage information without AI agent overhead.
