@@ -27,6 +27,12 @@ This repository contains:
 
 ### Tools
 - **copilot-usage**: Check GitHub Copilot billing and usage
+- **worktree-add**: Create new git worktree for parallel development
+- **worktree-list**: List all active worktrees
+- **worktree-remove**: Remove a worktree and optionally delete branch
+- **worktree-switch**: Switch between worktrees
+- **worktree-status**: View status of all worktrees
+- **worktree-sync**: Fetch and sync all worktrees with remote
 
 ## Tech Stack
 
