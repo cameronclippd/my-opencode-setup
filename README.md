@@ -11,6 +11,7 @@ This repository contains:
 - **1 Custom Tool** for direct execution
 
 ### Commands
+- **Git Worktree Management** (6 commands)
 - **PR & Git Workflows** (4 commands)
 - **Code Quality & Analysis** (4 commands) 
 - **Testing** (2 commands)
@@ -84,6 +85,71 @@ git pull
 ```
 
 ## Commands Reference
+
+### Git Worktree Management
+
+Git worktrees allow you to work on multiple branches simultaneously without switching contexts. All worktrees are created in `.opencode-wt/` directory.
+
+#### `/worktree-add`
+Creates a new git worktree for parallel development.
+- Automatically creates worktrees in `.opencode-wt/<branch-name>`
+- Smart branch detection (local/remote/new)
+- Auto-configures `.gitignore`
+- Automatically opens new OpenCode session in worktree
+
+**Usage:** 
+- `/worktree-add feature-auth` - Create new branch from current HEAD
+- `/worktree-add feature-api --from main` - Create from specific branch
+- `/worktree-add experiment --no-open` - Create without opening session
+
+#### `/worktree-list`
+Lists all active worktrees with their current branch and status.
+- Shows main and linked worktrees
+- Highlights current worktree
+- Displays branch names and commit hashes
+
+**Usage:** `/worktree-list`
+
+#### `/worktree-remove`
+Removes a worktree and optionally deletes the branch.
+- Validates no uncommitted changes
+- Prevents removing main worktree
+- Option to delete branch after removal
+
+**Usage:** 
+- `/worktree-remove feature-auth`
+- `/worktree-remove old-feature --delete-branch`
+- `/worktree-remove stale --force` - Force removal with uncommitted changes
+
+#### `/worktree-switch`
+Opens an OpenCode session in a different worktree.
+- Lists available worktrees if no argument provided
+- Automatically launches OpenCode in selected worktree
+
+**Usage:** 
+- `/worktree-switch` - Show available worktrees
+- `/worktree-switch feature-api` - Switch to specific worktree
+
+#### `/worktree-status`
+Shows detailed status of all worktrees including uncommitted changes and remote sync status.
+- Displays working directory status (clean/modified)
+- Shows commits ahead/behind remote
+- Lists last commit message and time
+- Summary of clean vs dirty worktrees
+
+**Usage:** `/worktree-status`
+
+#### `/worktree-sync`
+Fetches from remote and shows which worktrees have updates available.
+- Runs `git fetch origin`
+- Shows which worktrees are behind remote
+- Optionally pulls updates in all worktrees
+
+**Usage:** 
+- `/worktree-sync` - Fetch and show status
+- `/worktree-sync --pull` - Fetch and auto-pull in all worktrees
+
+---
 
 ### PR & Git Workflows
 
@@ -287,7 +353,7 @@ A custom tool that provides fast, direct access to GitHub Copilot billing and us
 **Command usage:**
 - `/copilot-usage` - Auto-detect account from git remote
 - `/copilot-usage personal` - Check personal account
-- `/copilot-usage clippd` - Check specific organization
+- `/copilot-usage my-org` - Check specific organization
 - `/copilot-usage --month 11 --year 2024` - Historical data
 - `/copilot-usage --verbose` - Detailed breakdown
 
